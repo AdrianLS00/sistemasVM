@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VALES+ - Bienvenido</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .welcome-container {
+            background: white;
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        .logo {
+            margin-bottom: 2rem;
+        }
+
+        .logo svg {
+            width: 180px;
+            height: auto;
+        }
+
+        .title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #007BFF;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .welcome-button {
+            width: 100%;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+        }
+
+        .welcome-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        .welcome-button:active {
+            transform: translateY(0);
+        }
+
+        .welcome-message {
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            color: #0369a1;
+            font-size: 0.875rem;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .welcome-container {
+                margin: 1rem;
+                padding: 2rem 1.5rem;
+            }
+            
+            .title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="welcome-container">
+        <div class="logo">
+
+        </div>
+
+        <h1 class="title">Bienvenido a VALES+</h1>
+
+        <form id="welcomeForm">
+            <div class="form-group">
+                <label for="name" class="form-label">Nombre completo</label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    class="form-input" 
+                    placeholder="Ingrese su nombre completo"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    class="form-input" 
+                    placeholder="Ingrese su correo electrónico"
+                >
+            </div>
+
+            <button type="submit" class="welcome-button">
+                Continuar
+            </button>
+        </form>
+
+        <div id="welcomeMessage" class="welcome-message">
+            ¡Bienvenido! Su información ha sido registrada correctamente.
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('welcomeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // const name = document.getElementById('name').value;
+            // const email = document.getElementById('email').value;
+
+            const name = "adrian";
+            const email = "adrian";
+            
+            if (name && email) {
+                const messageDiv = document.getElementById('welcomeMessage');
+                messageDiv.innerHTML = `¡Bienvenido ${name}! Su información ha sido registrada correctamente.`;
+                messageDiv.style.display = 'block';
+
+                window.location.href = "principal.html"
+
+
+                
+                // Reset form after 3 seconds
+                setTimeout(() => {
+                    this.reset();
+                    messageDiv.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f2f4f9c55ee534',t:'MTc2MDU2OTQ4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

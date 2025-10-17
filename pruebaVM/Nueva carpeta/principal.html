@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VALES+ - Sistema Corporativo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: white;
+            height: 70px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo svg {
+            width: 160px;
+            height: auto;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #007bff;
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -280px;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease;
+            z-index: 999;
+            overflow-y: auto;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+
+        .menu-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: #374151;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .menu-link:hover {
+            background-color: #f3f4f6;
+            color: #007bff;
+        }
+
+        .menu-link.active {
+            background-color: #e3f2fd;
+            color: #007bff;
+            border-right: 3px solid #007bff;
+        }
+
+        .menu-icon {
+            width: 20px;
+            margin-right: 1rem;
+            text-align: center;
+        }
+
+        .menu-arrow {
+            margin-left: auto;
+            transition: transform 0.2s ease;
+        }
+
+        .menu-arrow.rotated {
+            transform: rotate(90deg);
+        }
+
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background-color: #f8f9fa;
+        }
+
+        .submenu.open {
+            max-height: 200px;
+        }
+
+        .submenu-link {
+            display: block;
+            padding: 0.75rem 1.5rem 0.75rem 3.5rem;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .submenu-link:hover {
+            background-color: #e5e7eb;
+            color: #007bff;
+        }
+
+        .main-content {
+            margin-left: 0;
+            margin-top: 70px;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+            min-height: calc(100vh - 70px);
+        }
+
+        .main-content.shifted {
+            margin-left: 280px;
+        }
+
+        .content-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .content-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .content-subtitle {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+
+        .content-body {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-success {
+            background-color: #00994c;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #007a3d;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 153, 76, 0.3);
+        }
+
+        .btn-warning {
+            background-color: #ff6600;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #e55a00;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #007bff;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 768px) {
+            .main-content.shifted {
+                margin-left: 0;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo">
+            <svg viewBox="0 0 180 50" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="8" width="170" height="34" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+                <path d="M20 18 L25 30 L30 18" stroke="#007bff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="38" cy="25" r="6" fill="#00994c"/>
+                <path d="M35 25 L41 25 M38 22 L38 28" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                <text x="50" y="22" font-family="Poppins, sans-serif" font-size="11" font-weight="700" fill="#1f2937">VALES+</text>
+                <text x="50" y="33" font-family="Poppins, sans-serif" font-size="7" font-weight="400" fill="#6b7280">Tu Solución</text>
+                <circle cx="130" cy="20" r="2.5" fill="#ff6600"/>
+                <circle cx="140" cy="25" r="2" fill="#007bff"/>
+                <circle cx="150" cy="20" r="2" fill="#00994c"/>
+            </svg>
+        </div>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-menu">
+            <div class="menu-item">
+                <button class="menu-link" onclick="showContent('dashboard')">
+                    <i class="fas fa-home menu-icon"></i>
+                    Dashboard
+                </button>
+            </div>
+            
+            <div class="menu-item">
+                <button class="menu-link" onclick="toggleSubmenu('clientes')">
+                    <i class="fas fa-users menu-icon"></i>
+                    Clientes
+                    <i class="fas fa-chevron-right menu-arrow" id="clientes-arrow"></i>
+                </button>
+                <div class="submenu" id="clientes-submenu">
+                    <a href="#" class="submenu-link" onclick="showContent('clientes-registro')">Registro</a>
+                    <a href="#" class="submenu-link" onclick="showContent('clientes-consulta')">Consulta</a>
+                    <a href="#" class="submenu-link" onclick="showContent('clientes-reportes')">Reportes</a>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <button class="menu-link" onclick="toggleSubmenu('vales')">
+                    <i class="fas fa-ticket-alt menu-icon"></i>
+                    Vales
+                    <i class="fas fa-chevron-right menu-arrow" id="vales-arrow"></i>
+                </button>
+                <div class="submenu" id="vales-submenu">
+                    <a href="#" class="submenu-link" onclick="showContent('vales-generar')">Generar</a>
+                    <a href="#" class="submenu-link" onclick="showContent('vales-autorizar')">Autorizar</a>
+                    <a href="#" class="submenu-link" onclick="showContent('vales-historial')">Historial</a>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <button class="menu-link" onclick="toggleSubmenu('administracion')">
+                    <i class="fas fa-cog menu-icon"></i>
+                    Administración
+                    <i class="fas fa-chevron-right menu-arrow" id="administracion-arrow"></i>
+                </button>
+                <div class="submenu" id="administracion-submenu">
+                    <a href="#" class="submenu-link" onclick="showContent('admin-usuarios')">Usuarios</a>
+                    <a href="#" class="submenu-link" onclick="showContent('admin-roles')">Roles</a>
+                    <a href="#" class="submenu-link" onclick="showContent('admin-configuracion')">Configuración</a>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <button class="menu-link" onclick="toggleSubmenu('ayuda')">
+                    <i class="fas fa-question-circle menu-icon"></i>
+                    Ayuda
+                    <i class="fas fa-chevron-right menu-arrow" id="ayuda-arrow"></i>
+                </button>
+                <div class="submenu" id="ayuda-submenu">
+                    <a href="#" class="submenu-link" onclick="showContent('ayuda-manual')">Manual</a>
+                    <a href="#" class="submenu-link" onclick="showContent('ayuda-contacto')">Contacto</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+    <main class="main-content" id="mainContent">
+        <div id="content-area">
+            <!-- Dashboard content -->
+            <div class="content-header">
+                <h1 class="content-title">Dashboard Principal</h1>
+                <p class="content-subtitle">Bienvenido al sistema VALES+ - Resumen general de actividades</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">1,247</div>
+                    <div class="stat-label">Clientes Activos</div>
+                </div>
+                <div class="stat-card" style="border-left-color: #00994c;">
+                    <div class="stat-number">3,892</div>
+                    <div class="stat-label">Vales Generados</div>
+                </div>
+                <div class="stat-card" style="border-left-color: #ff6600;">
+                    <div class="stat-number">2,156</div>
+                    <div class="stat-label">Vales Autorizados</div>
+                </div>
+                <div class="stat-card" style="border-left-color: #6366f1;">
+                    <div class="stat-number">98.5%</div>
+                    <div class="stat-label">Eficiencia del Sistema</div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <h3 style="margin-bottom: 1.5rem; color: #1f2937;">Acciones Rápidas</h3>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="showContent('vales-generar')">
+                        <i class="fas fa-plus" style="margin-right: 0.5rem;"></i>
+                        Generar Vale
+                    </button>
+                    <button class="btn btn-success" onclick="showContent('clientes-registro')">
+                        <i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>
+                        Nuevo Cliente
+                    </button>
+                    <button class="btn btn-warning" onclick="showContent('vales-historial')">
+                        <i class="fas fa-history" style="margin-right: 0.5rem;"></i>
+                        Ver Historial
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let sidebarOpen = false;
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebarOpen = !sidebarOpen;
+            
+            if (sidebarOpen) {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                if (window.innerWidth > 768) {
+                    mainContent.classList.add('shifted');
+                }
+            } else {
+                closeSidebar();
+            }
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            mainContent.classList.remove('shifted');
+            sidebarOpen = false;
+        }
+
+        function toggleSubmenu(menuId) {
+            const submenu = document.getElementById(menuId + '-submenu');
+            const arrow = document.getElementById(menuId + '-arrow');
+            
+            submenu.classList.toggle('open');
+            arrow.classList.toggle('rotated');
+        }
+
+        function showContent(section) {
+            const contentArea = document.getElementById('content-area');
+            
+            // Clear active states
+            document.querySelectorAll('.menu-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            let content = '';
+            
+            switch(section) {
+                case 'dashboard':
+                    content = `
+                        <div class="content-header">
+                            <h1 class="content-title">Dashboard Principal</h1>
+                            <p class="content-subtitle">Bienvenido al sistema VALES+ - Resumen general de actividades</p>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">1,247</div>
+                                <div class="stat-label">Clientes Activos</div>
+                            </div>
+                            <div class="stat-card" style="border-left-color: #00994c;">
+                                <div class="stat-number">3,892</div>
+                                <div class="stat-label">Vales Generados</div>
+                            </div>
+                            <div class="stat-card" style="border-left-color: #ff6600;">
+                                <div class="stat-number">2,156</div>
+                                <div class="stat-label">Vales Autorizados</div>
+                            </div>
+                            <div class="stat-card" style="border-left-color: #6366f1;">
+                                <div class="stat-number">98.5%</div>
+                                <div class="stat-label">Eficiencia del Sistema</div>
+                            </div>
+                        </div>
+                        <div class="content-body">
+                            <h3 style="margin-bottom: 1.5rem; color: #1f2937;">Acciones Rápidas</h3>
+                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                <button class="btn btn-primary" onclick="showContent('vales-generar')">
+                                    <i class="fas fa-plus" style="margin-right: 0.5rem;"></i>
+                                    Generar Vale
+                                </button>
+                                <button class="btn btn-success" onclick="showContent('clientes-registro')">
+                                    <i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>
+                                    Nuevo Cliente
+                                </button>
+                                <button class="btn btn-warning" onclick="showContent('vales-historial')">
+                                    <i class="fas fa-history" style="margin-right: 0.5rem;"></i>
+                                    Ver Historial
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'clientes-registro':
+                    content = `
+                        <div class="content-header">
+                            <h1 class="content-title">Registro de Cliente</h1>
+                            <p class="content-subtitle">Ingrese los datos del nuevo cliente</p>
+                        </div>
+                        <div class="content-body">
+                            <form id="clienteForm">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="nombre" class="form-label">Nombre Completo</label>
+                                        <input type="text" id="nombre" class="form-input" placeholder="Ingrese el nombre completo" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email" class="form-label">Correo Electrónico</label>
+                                        <input type="email" id="email" class="form-input" placeholder="correo@ejemplo.com" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="telefono" class="form-label">Teléfono</label>
+                                        <input type="tel" id="telefono" class="form-input" placeholder="(555) 123-4567" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="empresa" class="form-label">Empresa</label>
+                                        <input type="text" id="empresa" class="form-input" placeholder="Nombre de la empresa">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save" style="margin-right: 0.5rem;"></i>
+                                    Registrar Cliente
+                                </button>
+                            </form>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'vales-generar':
+                    content = `
+                        <div class="content-header">
+                            <h1 class="content-title">Generar Vale</h1>
+                            <p class="content-subtitle">Crear un nuevo vale para cliente</p>
+                        </div>
+                        <div class="content-body">
+                            <form id="valeForm">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="cliente-vale" class="form-label">Cliente</label>
+                                        <input type="text" id="cliente-vale" class="form-input" placeholder="Buscar cliente..." required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="monto" class="form-label">Monto</label>
+                                        <input type="number" id="monto" class="form-input" placeholder="0.00" step="0.01" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="concepto" class="form-label">Concepto</label>
+                                        <input type="text" id="concepto" class="form-input" placeholder="Descripción del vale" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fecha-vencimiento" class="form-label">Fecha de Vencimiento</label>
+                                        <input type="date" id="fecha-vencimiento" class="form-input" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-ticket-alt" style="margin-right: 0.5rem;"></i>
+                                    Generar Vale
+                                </button>
+                            </form>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'admin-usuarios':
+                    content = `
+                        <div class="content-header">
+                            <h1 class="content-title">Gestión de Usuarios</h1>
+                            <p class="content-subtitle">Administrar usuarios del sistema</p>
+                        </div>
+                        <div class="content-body">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                                <h3 style="color: #1f2937; margin: 0;">Lista de Usuarios</h3>
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>
+                                    Nuevo Usuario
+                                </button>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; text-align: center; color: #6b7280;">
+                                <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                                <p>Funcionalidad de gestión de usuarios disponible</p>
+                                <p style="font-size: 0.875rem;">Aquí se mostraría la tabla de usuarios registrados</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                default:
+                    content = `
+                        <div class="content-header">
+                            <h1 class="content-title">Módulo en Desarrollo</h1>
+                            <p class="content-subtitle">Esta funcionalidad estará disponible próximamente</p>
+                        </div>
+                        <div class="content-body">
+                            <div style="text-align: center; padding: 3rem; color: #6b7280;">
+                                <i class="fas fa-tools" style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                                <h3 style="margin-bottom: 1rem;">Funcionalidad en Construcción</h3>
+                                <p>Este módulo se encuentra en desarrollo y estará disponible en futuras actualizaciones.</p>
+                                <button class="btn btn-primary" onclick="showContent('dashboard')" style="margin-top: 1rem;">
+                                    <i class="fas fa-home" style="margin-right: 0.5rem;"></i>
+                                    Volver al Dashboard
+                                </button>
+                            </div>
+                        </div>
+                    `;
+            }
+            
+            contentArea.innerHTML = content;
+            
+            // Add form handlers
+            if (section === 'clientes-registro') {
+                document.getElementById('clienteForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Cliente registrado exitosamente');
+                    this.reset();
+                });
+            }
+            
+            if (section === 'vales-generar') {
+                document.getElementById('valeForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Vale generado exitosamente');
+                    this.reset();
+                });
+            }
+            
+            // Close sidebar on mobile after selection
+            if (window.innerWidth <= 768) {
+                closeSidebar();
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 768) {
+                document.getElementById('mainContent').classList.remove('shifted');
+            } else if (sidebarOpen) {
+                document.getElementById('mainContent').classList.add('shifted');
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f3554dc3046ab6',t:'MTc2MDU3MzQyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
